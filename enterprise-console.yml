@@ -1,0 +1,63 @@
+---
+
+- hosts: console
+  become: yes
+  remote_user: svc-ansible
+
+  vars_files:
+    - vars/main-vars.yml
+
+  tasks: 
+    - name: install required libraries
+      yum: 
+        name: 
+          - libaio
+          - numactl
+          - tzdata
+          - ncurses-libs.x86_64
+        
+    - name: get download token from appdynamics official site
+      shell: "curl -X POST -d '{\"username\": \"{{ appdynamics_user }}\",\"password\": \"{{ appdynamics_password }}\",\"scopes\": [\"download\"]}' https://identity.msrv.saas.appdynamics.com/v2.0/oauth/token"
+      register: appd_token
+
+    - set_fact: 
+        appd_token_value: "{{ appd_token.stdout|from_json}}"
+
+    - debug: 
+        var: appd_token_value.access_token
+
+    - name: Download enterprise console
+      shell: "curl -L -O -H \"Authorization: Bearer {{ appd_token_value.access_token}}\" https://download.appdynamics.com/download/prox/download-file/enterprise-console/4.5.9.19782/platform-setup-x64-linux-4.5.9.19782.sh"
+      args: 
+        chdir: "{{ appd_tmp_dir }}"
+    
+    - name: Set permission for enterprise console
+      file: 
+        path: "{{ appd_tmp_dir }}platform-setup-x64-linux-4.5.9.19782.sh"
+        owner: svc-ansible
+        group: idm
+        mode: "0775"
+
+ 
+    - name: copy response file to tmp dir
+      template:
+        src: "templates/response.varfile.j2"
+        dest: "{{ appd_tmp_dir }}response.varfile"
+        owner: svc-ansible
+        group: idm
+        mode: '0775'
+ 
+    - name: Install the enterprise console using Installation file
+      command: "{{ appd_tmp_dir }}platform-setup-x64-linux-4.5.9.19782.sh -q -varfile  {{ appd_tmp_dir }}response.varfile"
+      become_user: svc-ansible
+      register: appd_install_status
+
+#    - name: Install the enterprise console using Installation file 
+#      shell: "{{ appd_tmp_dir }}platform-setup-x64-linux-4.5.9.19782.sh -q -varfile  {{ appd_tmp_dir }}response.varfile"
+#      register: appd_install_status
+#      
+    - debug: 
+        var: appd_install_status.stdout
+
+
+    
