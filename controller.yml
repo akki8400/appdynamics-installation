@@ -2,24 +2,21 @@
 
 - hosts: controller
   become: yes
-  remote_user: svc-ansible
+  remote_user: "{{ ansible_user }}"
 
   vars_files:
     - vars/main-vars.yml
 
-  tasks: 
- 
-    - name: Install the controller at desired location 
+  tasks:
+
+    - name: Install the controller at desired location
       command: "{{ appd_tmp_dir }}platform-setup-x64-linux-4.5.9.19782.sh -q -varfile  {{ appd_tmp_dir }}response.varfile"
-      become_user: svc-ansible
+      become_user: "{{ ansible_user }}"
       register: appd_install_status
 
-#    - name: Install the enterprise console using Installation file 
+#    - name: Install the enterprise console using Installation file
 #      shell: "{{ appd_tmp_dir }}platform-setup-x64-linux-4.5.9.19782.sh -q -varfile  {{ appd_tmp_dir }}response.varfile"
 #      register: appd_install_status
-#      
-    - debug: 
+#
+    - debug:
         var: appd_install_status.stdout
-
-
-    

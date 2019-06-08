@@ -2,75 +2,71 @@
 
 - hosts: agents
   become: yes
-  remote_user: svc-ansible
+  remote_user: "{{ ansible_user }}"
 
   vars_files:
     - vars/main-vars.yml
 
-  tasks: 
-        
-    - name: get download token from appdynamics official site      
+  tasks:
+
+    - name: get download token from appdynamics official site
       shell: "curl -X POST -d '{\"username\": \"{{ appdynamics_user }}\",\"password\": \"{{ appdynamics_password }}\",\"scopes\": [\"download\"]}' {{ appd_auth_url }}"
       register: appd_token
       run_once: true
       delegate_to: 127.0.0.1
 
-    - set_fact: 
+    - set_fact:
         appd_token_value: "{{ appd_token.stdout|from_json}}"
 
-    - debug: 
+    - debug:
         var: appd_token_value.access_token
 
     - name: Download machine agent
       shell: "curl -L -O -H \"Authorization: Bearer {{ appd_token_value.access_token}}\" {{ mach_agent_download_url }}"
-      args: 
+      args:
         chdir: "{{ appd_tmp_dir }}"
       run_once: true
       delegate_to: 127.0.0.1
-    
+
     - name: Set permission for machine agent
       file: 
         path: "{{ appd_tmp_dir }}{{ mach_agent_version }}"
-        owner: svc-ansible
-        group: idm
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_group }}"
         mode: "0775"
       delegate_to: 127.0.0.1
 
     - name: create machine agent installation dir
-      file: 
+      file:
         path: "{{ mach_agent_installation_dir }}"
         state: directory
-        owner: svc-ansible
-        group: idm
-        mode: "0775" 
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_group }}"
+        mode: "0775"
 
-    - name: Unarchive machine agent at installation path 
+    - name: Unarchive machine agent at installation path
       unarchive:
         src: "{{ appd_tmp_dir }}{{ mach_agent_version }}"
         dest: "{{ mach_agent_installation_dir }}"
-        owner: svc-ansible
-        group: idm
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_group }}"
         mode: 0775
 
     - name: replace configuration file
       template:
         src: "templates/machine-agent/controller-info.xml.j2"
         dest: "{{ mach_agent_installation_dir }}/conf/controller-info.xml"
-        owner: svc-ansible
-        group: idm
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_group }}"
         mode: '0775'
 
     - name: create machine agent log dir
       file:
         path: "{{ appd_logs_dir }}"
         state: directory
-        owner: svc-ansible
-        group: idm
+        owner: "{{ ansible_user }}"
+        group: "{{ ansible_group }}"
         mode: "0775"
 
     - name: start the machine agent
-      shell: runuser -l svc-ansible  -c "nohup /usr/bin/java  -jar {{ mach_agent_installation_dir }}/machineagent.jar >> {{ appd_logs_dir }}/appdlog 2>&1 &"
- 
-
-
-    
+      shell: runuser -l "{{ ansible_user }}"  -c "nohup /usr/bin/java  -jar {{ mach_agent_installation_dir }}/machineagent.jar >> {{ appd_logs_dir }}/appdlog 2>&1 &"

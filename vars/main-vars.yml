@@ -1,5 +1,9 @@
 ---
 
+######################ansible details#############
+ansible_user: "username"
+ansible_group: "groupname"
+
 
 #####Appdynamics official account details#############
 appdynamics_user: "your_user"
@@ -31,4 +35,3 @@ Controller_accountName: "account_name"
 mach_agent_download_url: "https://download.appdynamics.com/download/prox/download-file/machine/4.5.11.2163/MachineAgent-4.5.11.2163.zip"
 mach_agent_version: "MachineAgent-4.5.11.2163.zip"
 mach_agent_installation_dir: "installtion_dir_path"
-
