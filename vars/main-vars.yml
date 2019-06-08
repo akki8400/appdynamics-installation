@@ -2,33 +2,33 @@
 
 
 #####Appdynamics official account details#############
-appdynamics_user: "akash.verma@zycus.com"
-appdynamics_password: "Megi@akki8400"
+appdynamics_user: "your_user"
+appdynamics_password: "pasword"
 appd_auth_url: "https://identity.msrv.saas.appdynamics.com/v2.0/oauth/token"
-appd_logs_dir: "/U01/Logs"
+appd_logs_dir: "logs_path"
 #######Appdynamics Enterprise console details#########
-appd_tmp_dir: "/U01/tmp/"
-host_name: "ip-172-31-7-209.ap-south-1.compute.internal"
-data_dir: "/U01/appdynamics/platform/mysql/data"
-database_password: "idm12345"
-database_root_password: "idm12345"
-admin_password: "idm12345"
-installation_dir: "/U01/appdynamics/platform"
+appd_tmp_dir: "tmp_dir_path"
+host_name: "host_ip"
+data_dir: "data_dir_path"
+database_password: "password"
+database_root_password: "password"
+admin_password: "password"
+installation_dir: "dir_path"
 
 ##########Appdynamics controller details###############
-controller_dir: "/U01/appdynamics/controller"
-controller_name: "idm-enterprise"
+controller_dir: "controller_installtion_path"
+controller_name: "Demo_name"
 
-controllerHost: "wharf2019053004314710.saas.appdynamics.com"
+controllerHost: "controller_host_address"
 controllerPort: "443"
 Controller_ssl_enabled: "true"
-Controller_accountAccessKey: "6w8dvlz7uxcf"
-Controller_accountName: "wharf2019053004314710"
+Controller_accountAccessKey: "controller account key"
+Controller_accountName: "account_name"
 
 
 #########Appdynamics machine agent details#############
 
 mach_agent_download_url: "https://download.appdynamics.com/download/prox/download-file/machine/4.5.11.2163/MachineAgent-4.5.11.2163.zip"
 mach_agent_version: "MachineAgent-4.5.11.2163.zip"
-mach_agent_installation_dir: "/U01/appdynamics/machine-agent"
+mach_agent_installation_dir: "installtion_dir_path"
 
