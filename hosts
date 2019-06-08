@@ -1,9 +1,8 @@
 [console]
-172.31.7.209
+#console host address
 
 [controller]
-172.31.7.209
+#controller host address
 
 [agents]
-172.31.2.68
-172.31.6.172
+#agent host address
