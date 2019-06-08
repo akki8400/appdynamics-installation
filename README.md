@@ -5,7 +5,9 @@ This repo contains complete installation of appdynamics in ansible
 Usages:
 
 Clone the repository to your ansible server
+
 Enter all host address in hosts file
+
 First fill all key values of file:
 ```
 vars/main-vars.yml
